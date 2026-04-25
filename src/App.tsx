@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ShoppingBag, 
@@ -87,40 +87,36 @@ export default function App() {
     if (cart.length === 0) return;
     setIsSubmitting(true);
 
-        const productNames = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
-    const currentTotal = formatPrice(cartTotal);
-    const firstName = customerFirstName;
-    const lastName = customerLastName;
-    const email = customerEmail;
-    const address = customerAddress;
-    const city = customerCity;
-    const zip = customerZip;
-    
-    setIsSubmitting(true);
-    
-    // Data for Google Sheets
-    const sheetData = new URLSearchParams();
-    sheetData.append('Nama Depan', firstName);
-    sheetData.append('Nama Belakang', lastName);
-    sheetData.append('Email', email);
-    sheetData.append('Alamat', address);
-    sheetData.append('Kota', city);
-    sheetData.append('Kode Pos', zip);
-    sheetData.append('Nama Produk', productNames);
-    sheetData.append('Total Harga', currentTotal);
-    sheetData.append('Waktu & Tanggal', `${formattedTime}, ${formattedDate}`);
+    const productNames = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString('id-ID');
+    const formattedDate = now.toLocaleDateString('id-ID');
+    
+    setIsSubmitting(true);
+    
+    // Data for Google Sheets
+    const sheetData = new URLSearchParams();
+    sheetData.append('Nama Depan', formData.firstName);
+    sheetData.append('Nama Belakang', formData.lastName);
+    sheetData.append('Email', formData.email);
+    sheetData.append('Alamat', formData.address);
+    sheetData.append('Kota', formData.city);
+    sheetData.append('Kode Pos', formData.zipCode);
+    sheetData.append('Nama Produk', productNames);
+    sheetData.append('Total Harga', totalPrice.toString());
+    sheetData.append('Waktu & Tanggal', `${formattedTime}, ${formattedDate}`);
 
-    try {
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwYZ78YHGsqinfDswyarIK4JWEFKSXCBJNsa-JOL53kti0x9Hs_k4GONusF1jMUaZsT/exec'; //ubah link hasil deploy appscript pada gsheet     
-      // Kirim ke Google Sheets dengan format form-urlencoded yang lebih kompatibel dengan Apps Script doPost
-      await fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: sheetData.toString()
-      });
+    try {
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyTMBtsIN3FWXUXnjxniDtBKHlNbNqjv2X6CE1jN5HVbqfySrKxnUh-AqA_HUe3lvmJ/exec'; //ubah link hasil deploy appscript pada gsheet     
+      // Kirim ke Google Sheets dengan format form-urlencoded yang lebih kompatibel dengan Apps Script doPost
+      await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: sheetData.toString()
+      });
 
       
       alert('Pemesanan Berhasil Terkirim! Mohon tunggu konfirmasi dari kami.');
