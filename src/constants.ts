@@ -62,7 +62,7 @@ export const PRODUCTS: Product[] = [
     name: 'Cetak Kartu Nama (1 Box)',
     price: 45000,
     category: 'Cetak',
-    image: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6?q=80&w=800&auto=format&fit=crop',
+    image: 'https://lh3.googleusercontent.com/d/1ixVpJK6zQaaor0rXirGzXE43krbBvEjZ',
     description: 'Cetak kartu nama profesional dengan berbagai pilihan bahan.'
   },
   {
@@ -70,14 +70,23 @@ export const PRODUCTS: Product[] = [
     name: 'Kaos Sablon DTF',
     price: 85000,
     category: 'Merchandise',
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+    image: 'https://lh3.googleusercontent.com/d/1-SLz8fYR3lGBI6fPjZ3FQXVJDemWb1EP',
     description: 'Sablon kaos kualitas premium dengan teknologi DTF.'
+  },
+  {
+    id: 'medali',
+    name: 'Medali',
+    price: 15000,
+    category: 'Merchandise',
+    image: 'https://lh3.googleusercontent.com/d/1aTn-qLrlYPmXpbVDllB13spwnFZ61PiL',
+    description: 'Medali berkualitas untuk penghargaan dan kenang-kenangan.'
   }
 ];
 
 export const CONTACT_INFO = {
-  whatsapp: '6281234567890', // Placeholder nomor WhatsApp admin StapOne
-  address: 'Jl. Gorontalo No. 1, Tanjung Priok, Jakarta Utara',
+  whatsapp: '6283892514695',
+  address: 'Jl. Mangga No.3, Jakarta Utara - 14270',
   school: 'SMK Tanjung Priok 1 (StapOne)',
-  instagram: 'dkv.stapone'
+  instagram: 'dkv.smktanjungpriok1',
+  phone: '+6283892514695'
 };
