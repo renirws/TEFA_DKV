@@ -24,6 +24,16 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('Semua');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    city: '',
+    zipCode: ''
+  });
 
   // Cart operations
   const addToCart = (product: Product) => {
@@ -70,6 +80,60 @@ export default function App() {
     
     const url = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
+  };
+
+  const checkoutToGoogleSheets = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cart.length === 0) return;
+    setIsSubmitting(true);
+
+        const productNames = cart.map(item => `${item.name} (x${item.quantity})`).join(', ');
+    const currentTotal = formatPrice(cartTotal);
+    const firstName = customerFirstName;
+    const lastName = customerLastName;
+    const email = customerEmail;
+    const address = customerAddress;
+    const city = customerCity;
+    const zip = customerZip;
+    
+    setIsSubmitting(true);
+    
+    // Data for Google Sheets
+    const sheetData = new URLSearchParams();
+    sheetData.append('Nama Depan', firstName);
+    sheetData.append('Nama Belakang', lastName);
+    sheetData.append('Email', email);
+    sheetData.append('Alamat', address);
+    sheetData.append('Kota', city);
+    sheetData.append('Kode Pos', zip);
+    sheetData.append('Nama Produk', productNames);
+    sheetData.append('Total Harga', currentTotal);
+    sheetData.append('Waktu & Tanggal', `${formattedTime}, ${formattedDate}`);
+
+    try {
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwYZ78YHGsqinfDswyarIK4JWEFKSXCBJNsa-JOL53kti0x9Hs_k4GONusF1jMUaZsT/exec'; //ubah link hasil deploy appscript pada gsheet     
+      // Kirim ke Google Sheets dengan format form-urlencoded yang lebih kompatibel dengan Apps Script doPost
+      await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: sheetData.toString()
+      });
+
+      
+      alert('Pemesanan Berhasil Terkirim! Mohon tunggu konfirmasi dari kami.');
+      setCart([]);
+      setIsCartOpen(false);
+      setIsCheckingOut(false);
+      setFormData({ firstName: '', lastName: '', email: '', address: '', city: '', zipCode: '' });
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('Gagal mengirim pesanan. Silakan coba lagi atau hubungi admin via WhatsApp.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const filteredProducts = activeCategory === 'Semua' 
@@ -282,67 +346,166 @@ export default function App() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-brand-bg z-[70] p-10 flex flex-col border-l border-black/10 shadow-2xl"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-brand-bg z-[70] flex flex-col border-l border-black/10 shadow-2xl overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-12 pb-6 border-b border-black/10">
-                <h3 className="text-3xl font-display font-black italic tracking-tighter uppercase">Your Bag</h3>
-                <button 
-                  onClick={() => setIsCartOpen(false)}
-                  className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100"
-                >
-                  Close
-                </button>
-              </div>
+              <div className="p-10 flex flex-col h-full">
+                <div className="flex items-center justify-between mb-12 pb-6 border-b border-black/10">
+                  <h3 className="text-3xl font-display font-black italic tracking-tighter uppercase">
+                    {isCheckingOut ? 'Details' : 'Your Bag'}
+                  </h3>
+                  <button 
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      setIsCheckingOut(false);
+                    }}
+                    className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100"
+                  >
+                    Close
+                  </button>
+                </div>
 
-              <div className="flex-grow overflow-y-auto pr-4 custom-scrollbar">
-                {cart.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-30">
-                    <ShoppingBag size={48} className="mb-4 stroke-1" />
-                    <p className="text-[10px] uppercase font-bold tracking-[0.2em]">Bag is currently empty</p>
-                  </div>
-                ) : (
-                  <div className="space-y-8">
-                    {cart.map((item) => (
-                      <div key={item.id} className="flex justify-between items-start">
-                        <div className="flex-grow">
-                          <h4 className="text-sm font-display font-black italic uppercase leading-none mb-2">{item.name}</h4>
-                          <p className="text-[10px] opacity-40 uppercase font-bold tracking-widest mb-4">
-                            {item.quantity} x Rp {item.price.toLocaleString('id-ID')}
-                          </p>
-                          <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest">
-                            <button onClick={() => updateQuantity(item.id, -1)} className="opacity-40 hover:opacity-100">Less</button>
-                            <span>{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, 1)} className="opacity-40 hover:opacity-100">More</button>
+                <div className="flex-grow overflow-y-auto pr-4 custom-scrollbar">
+                  {!isCheckingOut ? (
+                    cart.length === 0 ? (
+                      <div className="h-full flex flex-col items-center justify-center text-center opacity-30">
+                        <ShoppingBag size={48} className="mb-4 stroke-1" />
+                        <p className="text-[10px] uppercase font-bold tracking-[0.2em]">Bag is currently empty</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-8">
+                        {cart.map((item) => (
+                          <div key={item.id} className="flex justify-between items-start">
+                            <div className="flex-grow">
+                              <h4 className="text-sm font-display font-black italic uppercase leading-none mb-2">{item.name}</h4>
+                              <p className="text-[10px] opacity-40 uppercase font-bold tracking-widest mb-4">
+                                {item.quantity} x Rp {item.price.toLocaleString('id-ID')}
+                              </p>
+                              <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest">
+                                <button onClick={() => updateQuantity(item.id, -1)} className="opacity-40 hover:opacity-100">Less</button>
+                                <span>{item.quantity}</span>
+                                <button onClick={() => updateQuantity(item.id, 1)} className="opacity-40 hover:opacity-100">More</button>
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => removeFromCart(item.id)}
+                              className="text-[10px] font-bold text-brand-accent uppercase tracking-widest"
+                            >
+                              Remove
+                            </button>
                           </div>
+                        ))}
+                      </div>
+                    )
+                  ) : (
+                    <form id="checkout-form" onSubmit={checkoutToGoogleSheets} className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Nama Depan</label>
+                          <input 
+                            required
+                            name="Nama Depan"
+                            value={formData.firstName}
+                            onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                            className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent"
+                          />
                         </div>
+                        <div className="space-y-2">
+                          <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Nama Belakang</label>
+                          <input 
+                            required
+                            name="Nama Belakang"
+                            value={formData.lastName}
+                            onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                            className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Email</label>
+                        <input 
+                          required
+                          type="email"
+                          name="Email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Alamat</label>
+                        <textarea 
+                          required
+                          name="Alamat"
+                          rows={3}
+                          value={formData.address}
+                          onChange={(e) => setFormData({...formData, address: e.target.value})}
+                          className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent resize-none"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Kota</label>
+                          <input 
+                            required
+                            name="Kota"
+                            value={formData.city}
+                            onChange={(e) => setFormData({...formData, city: e.target.value})}
+                            className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[9px] uppercase font-bold opacity-40 tracking-widest">Kode Pos</label>
+                          <input 
+                            required
+                            name="Kode Pos"
+                            value={formData.zipCode}
+                            onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
+                            className="w-full bg-brand-muted/50 border border-black/5 p-3 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-brand-accent"
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  )}
+                </div>
+
+                {cart.length > 0 && (
+                  <div className="mt-12 pt-8 border-t border-black">
+                    <div className="flex justify-between items-end mb-8">
+                      <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">
+                        {isCheckingOut ? 'Total Order' : 'Subtotal'}
+                      </span>
+                      <span className="text-3xl font-display font-black italic tracking-tighter">
+                        Rp {totalPrice.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+                    {isCheckingOut ? (
+                      <div className="flex flex-col gap-4">
                         <button 
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-[10px] font-bold text-brand-accent uppercase tracking-widest"
+                          form="checkout-form"
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-brand-accent text-white py-6 text-[10px] font-bold uppercase tracking-[0.3em] shadow-lg shadow-brand-accent/20 hover:scale-[1.02] transition-transform disabled:opacity-50"
                         >
-                          Remove
+                          {isSubmitting ? 'Sending...' : 'Confirm Order'}
+                        </button>
+                        <button 
+                          onClick={() => setIsCheckingOut(false)}
+                          className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40 hover:opacity-100"
+                        >
+                          Back to Bag
                         </button>
                       </div>
-                    ))}
+                    ) : (
+                      <button 
+                        onClick={() => setIsCheckingOut(true)}
+                        className="w-full bg-brand-primary text-white py-6 text-[10px] font-bold uppercase tracking-[0.3em] shadow-lg shadow-black/10 hover:scale-[1.02] transition-transform"
+                      >
+                        Proceed to Checkout
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
-
-              {cart.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-black">
-                  <div className="flex justify-between items-end mb-8">
-                    <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">Subtotal</span>
-                    <span className="text-3xl font-display font-black italic tracking-tighter">
-                      Rp {totalPrice.toLocaleString('id-ID')}
-                    </span>
-                  </div>
-                  <button 
-                    onClick={checkoutWhatsApp}
-                    className="w-full bg-brand-accent text-white py-6 text-[10px] font-bold uppercase tracking-[0.3em] shadow-lg shadow-brand-accent/20 hover:scale-[1.02] transition-transform"
-                  >
-                    Checkout via WhatsApp
-                  </button>
-                </div>
-              )}
             </motion.div>
           </>
         )}
