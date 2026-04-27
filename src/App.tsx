@@ -95,17 +95,6 @@ export default function App() {
     cart.reduce((sum, item) => sum + item.quantity, 0)
   , [cart]);
 
-  const checkoutWhatsApp = () => {
-    if (cart.length === 0) return;
-
-    const message = `Halo StapOne! Saya ingin memesan:\n\n` +
-      cart.map(item => `- ${item.name} (${item.quantity}x) - Rp ${ (item.price * item.quantity).toLocaleString('id-ID') }`).join('\n') +
-      `\n\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}\n\nMohon informasi selanjutnya. Terima kasih!`;
-    
-    const url = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  };
-
   const checkoutToGoogleSheets = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) return;
@@ -115,8 +104,6 @@ export default function App() {
     const now = new Date();
     const formattedTime = now.toLocaleTimeString('id-ID');
     const formattedDate = now.toLocaleDateString('id-ID');
-    
-    setIsSubmitting(true);
     
     // Data for Google Sheets
     const sheetData = new URLSearchParams();
@@ -133,18 +120,33 @@ export default function App() {
 
     try {
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbzE3EY3LDxsL0iniwNmXUaOF9UKOuBEuj11M6qgxjEm09TWQwQWeK3TiOklacEaxcXy/exec'; //ubah link hasil deploy appscript pada gsheet     
-      // Kirim ke Google Sheets dengan format form-urlencoded yang lebih kompatibel dengan Apps Script doPost
+      
+      // Kirim ke Google Sheets
+      // Menggunakan mode: 'no-cors' adalah cara termudah untuk menghindari masalah CORS dengan Google Apps Script
+      // saat kita tidak perlu membaca isi responnya.
       await fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: sheetData.toString()
+        cache: 'no-cache',
+        body: sheetData
       });
 
+      // WhatsApp Message Integration
+      const message = `*HALO STAPONE! SAYA INGIN MEMESAN*%0A%0A` +
+        `*Data Pemesan:*%0A` +
+        `- Nama: ${formData.firstName} ${formData.lastName}%0A` +
+        `- Email: ${formData.email}%0A` +
+        `- Alamat: ${formData.address}%0A` +
+        `- Kota: ${formData.city} (${formData.zipCode})%0A%0A` +
+        `*Daftar Pesanan:*%0A${productNames.split(', ').map(p => `- ${p}`).join('%0A')}%0A%0A` +
+        `*Total Harga:* Rp ${totalPrice.toLocaleString('id-ID')}%0A%0A` +
+        `_Laporan pesanan sudah masuk ke sistem kami`;
+
+      const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`;
       
-      alert('Pemesanan Berhasil Terkirim! Mohon tunggu konfirmasi dari kami.');
+      alert('Pemesanan Berhasil Terkirim! Data Anda telah tersimpan dan akan diproses dalam waktu 1x24 jam. Klik OK untuk konfirmasi akhir via WhatsApp.');
+      window.open(whatsappUrl, '_blank');
+
       setCart([]);
       setIsCartOpen(false);
       setIsCheckingOut(false);
@@ -160,7 +162,15 @@ export default function App() {
       });
     } catch (error) {
       console.error('Submission error:', error);
-      alert('Gagal mengirim pesanan. Silakan coba lagi atau hubungi admin via WhatsApp.');
+      // Tetap arahkan ke WhatsApp jika gagal kirim ke Sheet agar pesanan tidak hilang
+      const message = `*PEMESANAN (OFFLINE SYNC)*%0A%0A` +
+        `Nama: ${formData.firstName}%0A` +
+        `Order: ${productNames}%0A` +
+        `Total: Rp ${totalPrice.toLocaleString('id-ID')}`;
+      const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`;
+      
+      alert('Koneksi ke sistem Sheets terganggu, tapi pesanan Anda tetap bisa dikirim langsung melalui WhatsApp.');
+      window.open(whatsappUrl, '_blank');
     } finally {
       setIsSubmitting(false);
     }
