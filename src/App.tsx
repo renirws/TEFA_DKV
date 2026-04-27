@@ -33,8 +33,31 @@ export default function App() {
     email: '',
     address: '',
     city: '',
-    zipCode: ''
+    zipCode: '',
+    buktiBayar: '',
+    fileName: ''
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Ukuran file maksimal adalah 2MB.');
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({
+        ...prev,
+        buktiBayar: reader.result as string,
+        fileName: file.name
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Cart operations
   const addToCart = (product: Product) => {
@@ -105,10 +128,11 @@ export default function App() {
     sheetData.append('Kode Pos', formData.zipCode);
     sheetData.append('Nama Produk', productNames);
     sheetData.append('Total Harga', totalPrice.toString());
+    sheetData.append('Upload Bukti Bayar', formData.buktiBayar);
     sheetData.append('Waktu & Tanggal', `${formattedTime}, ${formattedDate}`);
 
     try {
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyTMBtsIN3FWXUXnjxniDtBKHlNbNqjv2X6CE1jN5HVbqfySrKxnUh-AqA_HUe3lvmJ/exec'; //ubah link hasil deploy appscript pada gsheet     
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzE3EY3LDxsL0iniwNmXUaOF9UKOuBEuj11M6qgxjEm09TWQwQWeK3TiOklacEaxcXy/exec'; //ubah link hasil deploy appscript pada gsheet     
       // Kirim ke Google Sheets dengan format form-urlencoded yang lebih kompatibel dengan Apps Script doPost
       await fetch(scriptUrl, {
         method: 'POST',
@@ -124,7 +148,16 @@ export default function App() {
       setCart([]);
       setIsCartOpen(false);
       setIsCheckingOut(false);
-      setFormData({ firstName: '', lastName: '', email: '', address: '', city: '', zipCode: '' });
+      setFormData({ 
+        firstName: '', 
+        lastName: '', 
+        email: '', 
+        address: '', 
+        city: '', 
+        zipCode: '',
+        buktiBayar: '',
+        fileName: ''
+      });
     } catch (error) {
       console.error('Submission error:', error);
       alert('Gagal mengirim pesanan. Silakan coba lagi atau hubungi admin via WhatsApp.');
@@ -181,20 +214,20 @@ export default function App() {
             </a>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="relative p-3 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95"
+              className="relative p-3 sm:p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-90"
             >
-              <ShoppingCart size={20} className="text-primary" />
+              <ShoppingCart size={22} className="text-primary" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-energy text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full font-bold border-2 border-white">
+                <span className="absolute -top-1 -right-1 bg-energy text-white text-[10px] w-6 h-6 flex items-center justify-center rounded-full font-bold border-2 border-white">
                   {totalItems}
                 </span>
               )}
             </button>
             <button 
-              className="lg:hidden p-3 bg-slate-50 rounded-2xl"
+              className="lg:hidden p-3 sm:p-4 bg-slate-50 rounded-2xl active:scale-90 transition-transform"
               onClick={() => setIsMenuOpen(true)}
             >
               <Menu size={20} />
@@ -300,14 +333,14 @@ export default function App() {
                 <p className="text-slate-400 font-medium italic text-sm">Kualitas industri, hasil karya siswa DKV SMK Tanjung Priok 1.</p>
               </div>
               
-              <div className="flex flex-wrap justify-center gap-4 p-2 bg-slate-50 rounded-3xl self-center lg:self-end">
+              <div className="flex flex-wrap justify-center gap-3 p-2 bg-slate-50 rounded-3xl self-center lg:self-end">
                 {categories.map(cat => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all ${
+                    className={`px-6 py-4 sm:px-8 sm:py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
                       activeCategory === cat 
-                        ? 'bg-white text-primary shadow-lg scale-105' 
+                        ? 'bg-white text-primary shadow-lg' 
                         : 'text-slate-400 hover:text-primary'
                     }`}
                   >
@@ -431,7 +464,7 @@ export default function App() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[70] flex flex-col shadow-[-40px_0_100px_-20px_rgba(15,23,42,0.1)] overflow-hidden"
+              className="fixed top-0 right-0 h-full w-full bg-white z-[70] flex flex-col shadow-[-40px_0_100px_-20px_rgba(15,23,42,0.1)] overflow-hidden"
             >
               <div className="p-10 flex flex-col h-full">
                 <div className="flex items-center justify-between mb-12 pb-6 border-b border-slate-50">
@@ -469,10 +502,20 @@ export default function App() {
                                 <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-4">
                                   {item.quantity} x Rp {item.price.toLocaleString('id-ID')}
                                 </p>
-                                <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest">
-                                  <button onClick={() => updateQuantity(item.id, -1)} className="text-slate-300 hover:text-energy transition-colors">Less</button>
-                                  <span className="bg-slate-50 w-6 h-6 flex items-center justify-center rounded-lg">{item.quantity}</span>
-                                  <button onClick={() => updateQuantity(item.id, 1)} className="text-slate-300 hover:text-accent transition-colors">More</button>
+                        <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest py-2">
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, -1)} 
+                                    className="p-2 -m-2 text-slate-300 hover:text-energy transition-colors active:scale-125"
+                                  >
+                                    Less
+                                  </button>
+                                  <span className="bg-slate-50 w-8 h-8 flex items-center justify-center rounded-lg">{item.quantity}</span>
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, 1)} 
+                                    className="p-2 -m-2 text-slate-300 hover:text-accent transition-colors active:scale-125"
+                                  >
+                                    More
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -558,6 +601,24 @@ export default function App() {
                             className="w-full bg-slate-50 border-none rounded-2xl p-4 text-xs font-bold focus:ring-2 ring-accent/20 outline-none transition-all"
                             placeholder="14230"
                           />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[9px] uppercase font-black tracking-[0.2em] text-slate-300">Upload Bukti Bayar (Maks 2MB)</label>
+                        <div className="relative group">
+                          <input 
+                            required
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                          />
+                          <div className={`w-full border-2 border-dashed ${formData.fileName ? 'border-accent bg-accent/5' : 'border-slate-100 hover:border-accent bg-slate-50'} rounded-2xl p-8 text-center transition-all`}>
+                            <p className={`text-xs font-bold uppercase tracking-widest ${formData.fileName ? 'text-accent' : 'text-slate-400'}`}>
+                              {formData.fileName || 'Pilih File atau Drag & Drop'}
+                            </p>
+                            <p className="text-[10px] text-slate-300 mt-2">JPG, PNG atau PDF (Maks 2MB)</p>
+                          </div>
                         </div>
                       </div>
                     </form>
