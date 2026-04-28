@@ -84,9 +84,17 @@ export const PRODUCTS: Product[] = [
 ];
 
 export const CONTACT_INFO = {
-  whatsapp: '6283892514695',
+  whatsapp: '6283892514698',
   address: 'Jl. Mangga No.3, Jakarta Utara - 14270',
   school: 'SMK Tanjung Priok 1 (StapOne)',
   instagram: 'dkv.smktanjungpriok1',
-  phone: '+6283892514695'
+  phone: '+6283892514698',
+  admins: [
+    { name: 'Anggi', phone: '+62 838-9251-4698', wa: '6283892514698' },
+    { name: 'Rizal', phone: '+62 857-1847-9450', wa: '6285718479450' }
+  ],
+  bank: {
+    name: 'BCA',
+    number: '0070053705'
+  }
 };

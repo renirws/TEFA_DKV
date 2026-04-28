@@ -425,19 +425,38 @@ export default function App() {
                 <div className="grid md:grid-cols-2 gap-12 lg:col-span-2">
                   <div className="space-y-4">
                     <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-energy mb-6">Hubungi Kami</h4>
-                    <div className="flex items-start lg:items-center justify-center lg:justify-start gap-4 text-slate-600">
-                      <MapPin size={24} className="text-accent shrink-0" />
-                      <p className="text-sm font-medium">{CONTACT_INFO.address}</p>
-                    </div>
-                    <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-600">
-                      <Instagram size={20} className="text-accent shrink-0" />
-                      <a href={`https://instagram.com/${CONTACT_INFO.instagram}`} target="_blank" className="text-sm font-bold border-b border-transparent hover:border-accent transition-all leading-none pb-1">
-                        @{CONTACT_INFO.instagram}
-                      </a>
-                    </div>
-                    <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-600">
-                      <Phone size={20} className="text-accent shrink-0" />
-                      <p className="text-sm font-bold">{CONTACT_INFO.phone}</p>
+                    <div className="space-y-6">
+                      <div className="flex items-start lg:items-center justify-center lg:justify-start gap-4 text-slate-600">
+                        <MapPin size={24} className="text-accent shrink-0" />
+                        <p className="text-sm font-medium">{CONTACT_INFO.address}</p>
+                      </div>
+
+                      <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-600">
+                        <Instagram size={20} className="text-accent shrink-0" />
+                        <a href={`https://instagram.com/${CONTACT_INFO.instagram}`} target="_blank" className="text-sm font-bold border-b border-transparent hover:border-accent transition-all leading-none pb-1">
+                          @{CONTACT_INFO.instagram}
+                        </a>
+                      </div>
+                      
+                      {CONTACT_INFO.admins.map((admin, idx) => (
+                        <div key={idx} className="flex items-center justify-center lg:justify-start gap-4 text-slate-600">
+                          <MessageCircle size={20} className="text-accent shrink-0" />
+                          <div className="text-left">
+                            <p className="text-[10px] uppercase font-bold text-slate-400">Admin {idx + 1}: {admin.name}</p>
+                            <a href={`https://wa.me/${admin.wa}`} target="_blank" className="text-sm font-bold border-b border-transparent hover:border-accent transition-all">{admin.phone}</a>
+                          </div>
+                        </div>
+                      ))}
+
+                      <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-600 pt-4 border-t border-slate-50">
+                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-primary font-bold text-xs uppercase tracking-tighter">
+                          {CONTACT_INFO.bank.name}
+                        </div>
+                        <div className="text-left">
+                          <p className="text-[10px] uppercase font-bold text-slate-400">Transfer Pembayaran</p>
+                          <p className="text-sm font-black tracking-widest">{CONTACT_INFO.bank.number}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   
@@ -541,6 +560,18 @@ export default function App() {
                     )
                   ) : (
                     <form id="checkout-form" onSubmit={checkoutToGoogleSheets} className="space-y-8">
+                      <div className="p-6 bg-accent/5 rounded-[2rem] border border-accent/10 mb-8">
+                        <p className="text-[9px] uppercase font-black tracking-[0.2em] text-accent mb-4">Informasi Pembayaran</p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-lg font-display font-black tracking-tight">{CONTACT_INFO.bank.name} - {CONTACT_INFO.bank.number}</p>
+                            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">A/N SMK TANJUNG PRIOK 1</p>
+                          </div>
+                          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                            <ShoppingBag size={20} className="text-accent" />
+                          </div>
+                        </div>
+                      </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-3">
                           <label className="text-[9px] uppercase font-black tracking-[0.2em] text-slate-300">First Name</label>
