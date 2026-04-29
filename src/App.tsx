@@ -410,7 +410,43 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            <footer className="mt-40 border-t border-slate-100 pt-20 pb-12">
+            {/* Testimonials */}
+            <section id="testimoni" className="mt-40 overflow-hidden">
+              <div className="text-center mb-20">
+                <h2 className="text-5xl lg:text-6xl mb-6">Cerita <span className="text-accent italic">Mereka.</span></h2>
+                <p className="text-slate-400 font-medium italic text-sm">Apa kata klien tentang layanan StapOne.</p>
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-8">
+                {[
+                  { name: 'Siti Aminah', role: 'UMKM Makanan', quote: 'Hasil cetak stiker produknya sangat tajam dan warnanya keluar banget. Sangat memuaskan!' },
+                  { name: 'Budi Santoso', role: 'Event Organizer', quote: 'Pesan medali untuk lomba sekolah, kualitasnya premium dan pengerjaannya sangat tepat waktu.' },
+                  { name: 'Rina Wijaya', role: 'Mahasiswa', quote: 'Desain logo buat tugas akhir saya dibantu dengan sangat profesional. Mentor-mentornya asik!' }
+                ].map((testi, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                    className="p-10 bg-slate-50 rounded-[2.5rem] flex-1 relative"
+                  >
+                    <div className="absolute top-10 right-10 text-slate-200">
+                      <MessageCircle size={40} className="fill-current opacity-20" />
+                    </div>
+                    <p className="text-lg font-medium text-slate-600 mb-8 relative z-10 leading-relaxed italic">
+                      "{testi.quote}"
+                    </p>
+                    <div>
+                      <h4 className="font-display font-black text-xl tracking-tight">{testi.name}</h4>
+                      <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-accent mt-1">{testi.role}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            <footer id="kontak" className="mt-40 border-t border-slate-100 pt-20 pb-12">
               <div className="grid lg:grid-cols-3 gap-16 mb-20 text-center lg:text-left">
                 <div className="space-y-6">
                   <div className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
@@ -442,19 +478,24 @@ export default function App() {
                         <div key={idx} className="flex items-center justify-center lg:justify-start gap-4 text-slate-600">
                           <MessageCircle size={20} className="text-accent shrink-0" />
                           <div className="text-left">
-                            <p className="text-[10px] uppercase font-bold text-slate-400">Admin {idx + 1}: {admin.name}</p>
-                            <a href={`https://wa.me/${admin.wa}`} target="_blank" className="text-sm font-bold border-b border-transparent hover:border-accent transition-all">{admin.phone}</a>
+                            <p className="text-[10px] uppercase font-bold text-slate-400 leading-none mb-1">Admin {idx + 1}: {admin.name}</p>
+                            <a href={`https://wa.me/${admin.wa}`} target="_blank" className="text-sm font-bold border-b border-transparent hover:border-accent transition-all inline-block">{admin.phone}</a>
                           </div>
                         </div>
                       ))}
 
-                      <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-600 pt-4 border-t border-slate-50">
-                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-primary font-bold text-xs uppercase tracking-tighter">
-                          {CONTACT_INFO.bank.name}
-                        </div>
-                        <div className="text-left">
-                          <p className="text-[10px] uppercase font-bold text-slate-400">Transfer Pembayaran</p>
-                          <p className="text-sm font-black tracking-widest">{CONTACT_INFO.bank.number}</p>
+                      <div className="pt-8 border-t border-slate-50 mt-8">
+                        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm inline-block w-full max-w-xs">
+                          <p className="text-[9px] uppercase font-black tracking-[0.2em] text-accent mb-3 text-left leading-none">Informasi Rekening</p>
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-primary font-bold text-xs uppercase tracking-tighter shrink-0">
+                              {CONTACT_INFO.bank.name}
+                            </div>
+                            <div className="text-left overflow-hidden">
+                              <p className="text-sm font-black tracking-widest truncate">{CONTACT_INFO.bank.number}</p>
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">A/N SMK TANJUNG PRIOK 1</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
