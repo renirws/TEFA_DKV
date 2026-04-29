@@ -10,22 +10,6 @@ export const PRODUCTS: Product[] = [
     description: 'Jasa pembuatan logo kreatif untuk identitas brand Anda.'
   },
   {
-    id: '2',
-    name: 'Cetak Banner (Per Meter)',
-    price: 25000,
-    category: 'Cetak',
-    image: 'https://images.unsplash.com/photo-1562654508-4d9213bc5871?q=80&w=800&auto=format&fit=crop',
-    description: 'Cetak banner berkualitas tinggi untuk kebutuhan promosi.'
-  },
-  {
-    id: '3',
-    name: 'Tumbler Custom Grafis',
-    price: 75000,
-    category: 'Merchandise',
-    image: 'https://images.unsplash.com/photo-1574533030805-4f40f0907f1d?q=80&w=800&auto=format&fit=crop',
-    description: 'Tumbler eksklusif dengan desain custom sesuai keinginan.'
-  },
-  {
     id: 'spanduk',
     name: 'Spanduk (Per Meter)',
     price: 50000,
