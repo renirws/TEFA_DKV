@@ -112,6 +112,30 @@ export const PRODUCTS: Product[] = [
     category: 'Foto',
     image: 'https://lh3.googleusercontent.com/d/1dZ08NNHHM7hKE9UN_DEqcMMXAYvz_pWK',
     description: 'Cetak pas foto ukuran 4x6 cm (Harga per lembar).'
+  },
+  {
+    id: 'desain-banner',
+    name: 'Jasa Desain Banner',
+    price: 100000,
+    category: 'Desain',
+    image: 'https://lh3.googleusercontent.com/d/13eumOF4IhHnZdYID0vGKIWETXJcD4-1y',
+    description: 'Jasa desain banner profesional untuk promosi Anda.'
+  },
+  {
+    id: 'cetak-banner-hq',
+    name: 'Cetak Banner (HQ)',
+    price: 50000,
+    category: 'Cetak',
+    image: 'https://lh3.googleusercontent.com/d/13eumOF4IhHnZdYID0vGKIWETXJcD4-1y',
+    description: 'Cetak banner berkualitas tinggi dengan warna tajam (Harga per meter).'
+  },
+  {
+    id: 'mug-custom',
+    name: 'MUG Custom',
+    price: 25000,
+    category: 'Merchandise',
+    image: 'https://lh3.googleusercontent.com/d/1OciUqk5U-Q22n7Z26YeED1i1gXztiTvp',
+    description: 'Mug keramik berkualitas dengan print kustom yang tahan lama.'
   }
 ];
 
