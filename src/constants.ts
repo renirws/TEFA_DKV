@@ -80,6 +80,38 @@ export const PRODUCTS: Product[] = [
     category: 'Merchandise',
     image: 'https://lh3.googleusercontent.com/d/1aTn-qLrlYPmXpbVDllB13spwnFZ61PiL',
     description: 'Medali berkualitas untuk penghargaan dan kenang-kenangan.'
+  },
+  {
+    id: 'photo-formal',
+    name: 'Jasa Photo Formal',
+    price: 20000,
+    category: 'Foto',
+    image: 'https://lh3.googleusercontent.com/d/1dZ08NNHHM7hKE9UN_DEqcMMXAYvz_pWK',
+    description: 'Jasa pemotretan foto formal untuk kebutuhan ijazah, paspor, dll.'
+  },
+  {
+    id: 'cetak-photo-2x3',
+    name: 'Cetak Photo 2x3',
+    price: 1000,
+    category: 'Foto',
+    image: 'https://lh3.googleusercontent.com/d/1dZ08NNHHM7hKE9UN_DEqcMMXAYvz_pWK',
+    description: 'Cetak pas foto ukuran 2x3 cm (Harga per lembar).'
+  },
+  {
+    id: 'cetak-photo-3x4',
+    name: 'Cetak Photo 3x4',
+    price: 1500,
+    category: 'Foto',
+    image: 'https://lh3.googleusercontent.com/d/1dZ08NNHHM7hKE9UN_DEqcMMXAYvz_pWK',
+    description: 'Cetak pas foto ukuran 3x4 cm (Harga per lembar).'
+  },
+  {
+    id: 'cetak-photo-4x6',
+    name: 'Cetak Photo 4x6',
+    price: 2000,
+    category: 'Foto',
+    image: 'https://lh3.googleusercontent.com/d/1dZ08NNHHM7hKE9UN_DEqcMMXAYvz_pWK',
+    description: 'Cetak pas foto ukuran 4x6 cm (Harga per lembar).'
   }
 ];
 
@@ -95,6 +127,7 @@ export const CONTACT_INFO = {
   ],
   bank: {
     name: 'BCA',
-    number: '0070053705'
+    number: '0070053705',
+    holder: 'Anggi Arini Widiastuti'
   }
 };

@@ -132,7 +132,7 @@ export default function App() {
       });
 
       // WhatsApp Message Integration
-      const message = `*HALO STAPONE! SAYA INGIN MEMESAN*%0A%0A` +
+      const message = `*HALO PRIOKART! SAYA INGIN MEMESAN*%0A%0A` +
         `*Data Pemesan:*%0A` +
         `- Nama: ${formData.firstName} ${formData.lastName}%0A` +
         `- Email: ${formData.email}%0A` +
@@ -180,7 +180,7 @@ export default function App() {
     ? PRODUCTS 
     : PRODUCTS.filter(p => p.category === activeCategory);
 
-  const categories = ['Semua', 'Desain', 'Cetak', 'Merchandise'];
+  const categories = ['Semua', 'Desain', 'Cetak', 'Foto', 'Merchandise'];
 
   return (
     <div className="min-h-screen bg-surface selection:bg-accent selection:text-white">
@@ -193,11 +193,11 @@ export default function App() {
             className="flex items-center space-x-3"
           >
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-primary/20">
-              S1
+              PA
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-display font-black tracking-tight leading-none">
-                STAP<span className="text-energy">ONE</span>
+                PRIOK<span className="text-energy">ART</span>
               </span>
               <span className="text-[8px] uppercase tracking-[0.2em] font-bold opacity-40">
                 Teaching Factory DKV
@@ -286,12 +286,12 @@ export default function App() {
                 Teaching Factory DKV
               </span>
               <h1 className="text-6xl lg:text-8xl leading-[0.95] mb-8">
-                Unleash <br />
-                <span className="gradient-text">Creative</span> <br />
-                Power.
+                Priok <br />
+                <span className="gradient-text">Art.</span> <br />
+                Creative.
               </h1>
               <p className="text-lg text-slate-500 mb-12 max-w-lg font-medium leading-relaxed">
-                StapOne menghadirkan solusi desain profesional, cetak berkualitas, dan merchandise kustom dengan standar industri nyata.
+                Priokart menghadirkan solusi desain profesional, cetak berkualitas, dan merchandise kustom dengan standar industri nyata.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a href="#katalog" className="btn-energy flex items-center justify-center gap-2 group text-center">
@@ -414,7 +414,7 @@ export default function App() {
             <section id="testimoni" className="mt-40 overflow-hidden">
               <div className="text-center mb-20">
                 <h2 className="text-5xl lg:text-6xl mb-6">Cerita <span className="text-accent italic">Mereka.</span></h2>
-                <p className="text-slate-400 font-medium italic text-sm">Apa kata klien tentang layanan StapOne.</p>
+                <p className="text-slate-400 font-medium italic text-sm">Apa kata klien tentang layanan Priokart.</p>
               </div>
               
               <div className="flex flex-col md:flex-row gap-8">
@@ -493,7 +493,7 @@ export default function App() {
                             </div>
                             <div className="text-left overflow-hidden">
                               <p className="text-sm font-black tracking-widest truncate">{CONTACT_INFO.bank.number}</p>
-                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">A/N SMK TANJUNG PRIOK 1</p>
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">A/N {CONTACT_INFO.bank.holder}</p>
                             </div>
                           </div>
                         </div>
@@ -606,7 +606,7 @@ export default function App() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-lg font-display font-black tracking-tight">{CONTACT_INFO.bank.name} - {CONTACT_INFO.bank.number}</p>
-                            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">A/N SMK TANJUNG PRIOK 1</p>
+                            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">A/N {CONTACT_INFO.bank.holder}</p>
                           </div>
                           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                             <ShoppingBag size={20} className="text-accent" />

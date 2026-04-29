@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   price: number;
   image: string;
-  category: 'Desain' | 'Cetak' | 'Merchandise';
+  category: 'Desain' | 'Cetak' | 'Merchandise' | 'Foto';
   description: string;
 }
 
