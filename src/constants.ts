@@ -120,6 +120,14 @@ export const PRODUCTS: Product[] = [
     category: 'Merchandise',
     image: 'https://lh3.googleusercontent.com/d/1OciUqk5U-Q22n7Z26YeED1i1gXztiTvp',
     description: 'Mug keramik berkualitas dengan print kustom yang tahan lama.'
+  },
+  {
+    id: 'piagam',
+    name: 'Piagam',
+    price: 50000,
+    category: 'Cetak',
+    image: 'https://lh3.googleusercontent.com/d/17AER-eSGO-2NxkPr1q7fsj4CPzwK8hva',
+    description: 'Cetak piagam penghargaan berkualitas untuk berbagai acara.'
   }
 ];
 
