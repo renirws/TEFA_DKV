@@ -134,7 +134,7 @@ export const PRODUCTS: Product[] = [
 export const CONTACT_INFO = {
   whatsapp: '6283892514698',
   address: 'Jl. Mangga No.3, Jakarta Utara - 14270',
-  school: 'SMK Tanjung Priok 1 (StapOne)',
+  school: 'SMK Tanjung Priok 1 (Priokart)',
   instagram: 'dkv.smktanjungpriok1',
   phone: '+6283892514698',
   admins: [

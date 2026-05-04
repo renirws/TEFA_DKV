@@ -192,12 +192,16 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-3"
           >
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-primary/20">
-              PA
+            <div className="w-12 h-12 lg:w-14 lg:h-14 flex items-center justify-center overflow-hidden">
+              <img 
+                src="https://lh3.googleusercontent.com/d/17n8x5YU4SGrqhURu-JJ6P8u98Q2XOwR7" 
+                alt="Priokart Logo" 
+                className="w-full h-full object-contain scale-125"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-display font-black tracking-tight leading-none">
-                PRIOK<span className="text-energy">ART</span>
+              <span className="text-xl font-display font-black tracking-tight leading-none uppercase">
+                Priok<span className="text-energy">art</span>
               </span>
               <span className="text-[8px] uppercase tracking-[0.2em] font-bold opacity-40">
                 Teaching Factory DKV
@@ -282,7 +286,11 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
             >
               <span className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-widest mb-8 border border-accent/20">
-                <span className="w-2 h-2 bg-accent rounded-full animate-pulse mr-2"></span>
+                <img 
+                  src="https://lh3.googleusercontent.com/d/1jxCks5f5rMm5oQ9FL9gtRqQXeWVj9sk5" 
+                  alt="Icon" 
+                  className="w-4 h-4 mr-2 object-contain"
+                />
                 Teaching Factory DKV
               </span>
               <h1 className="text-6xl lg:text-8xl leading-[0.95] mb-8">
@@ -450,8 +458,14 @@ export default function App() {
               <div className="grid lg:grid-cols-3 gap-16 mb-20 text-center lg:text-left">
                 <div className="space-y-6">
                   <div className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
-                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-display font-black text-2xl shadow-xl">S1</div>
-                    <h1 className="text-2xl font-display font-black tracking-tight">STAP<span className="text-energy">ONE</span></h1>
+                    <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
+                      <img 
+                        src="https://lh3.googleusercontent.com/d/17n8x5YU4SGrqhURu-JJ6P8u98Q2XOwR7" 
+                        alt="Priokart Logo" 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <h1 className="text-2xl font-display font-black tracking-tight uppercase">Priok<span className="text-energy">art</span></h1>
                   </div>
                   <p className="text-slate-400 text-sm leading-relaxed max-w-sm mx-auto lg:mx-0">
                     Teaching Factory DKV SMK Tanjung Priok 1 merupakan wadah kreatif dan produktif berbasis standar industri pendidikan.
@@ -511,7 +525,7 @@ export default function App() {
               
               <div className="text-center pt-12 border-t border-slate-50">
                 <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.4em]">
-                  © {new Date().getFullYear()} STAPONE - SMK TANJUNG PRIOK 1. All Rights Reserved.
+                  © {new Date().getFullYear()} PRIOKART - SMK TANJUNG PRIOK 1. All Rights Reserved.
                 </p>
               </div>
             </footer>
